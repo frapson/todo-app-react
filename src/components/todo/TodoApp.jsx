@@ -19,6 +19,9 @@ function LoginComponent() {
 
     const [username, setUsername] = useState('frapson')
     const [password, setPassword] = useState('')
+    const [showSuccessMessage, setSuccessMessage] = useState('false')
+    const [showErrorMessage, setErrorMessage] = useState('false')
+    
 
     function handleUsernameChange(event) {
         setUsername(event.target.value)
@@ -28,8 +31,23 @@ function LoginComponent() {
         setPassword(event.target.value)
     }
     
+
+    function handleSubmit() {
+        if(username==='frapson' && password==='abc'){
+            setSuccessMessage(true)
+            setErrorMessage(false)
+        }else{
+            setSuccessMessage(false)
+            setErrorMessage(true)
+        }
+    }
+
+
     return (
         <div className="Login">
+            {showSuccessMessage && <div className="successMessage">Success</div>}
+            {showErrorMessage && <div className="errorMessage">Failed</div>}
+
             <div className="LoginForm">
                 <div>
                     <label>Username</label>
@@ -40,13 +58,14 @@ function LoginComponent() {
                     <input type="password" name="password" value={password} onChange={handlePasswordChange}></input>
                 </div>
                 <div>
-                    <button type="button" name="login">SUBMIT</button>
+                    <button type="button" name="login" onClick={handleSubmit}>SUBMIT</button>
                 </div>
             </div>
             
         </div>
     )
 }
+
 
 
 function WelcomeComponent() {
