@@ -1,27 +1,32 @@
 import { useState } from 'react'
-import {BrowserRouter, Route, Routes, useNavigate, useParams, Link} from 'react-router-dom'
+import { BrowserRouter, Route, Routes, useNavigate, useParams, Link } from 'react-router-dom'
 
 import './TodoApp.css'
 
 export default function TodoApp() {
     return (
         <div className="TodoApp">
-            <BrowserRouter>
-                <Routes>
-                    <Route path='/' element={ <LoginComponent /> }></Route>
-                    <Route path='/login' element={ <LoginComponent /> }></Route>
-                    <Route path='/welcome/:username' element={ <WelcomeComponent /> }></Route>
-                    <Route path='/todos' element={ <ListTodosComponent /> }></Route>
 
-                    <Route path='*' element={ <ErrorComponent /> }></Route>
+            <BrowserRouter>
+                <HeaderComponent />
+
+                <Routes>
+                    <Route path='/' element={<LoginComponent />}></Route>
+                    <Route path='/login' element={<LoginComponent />}></Route>
+                    <Route path='/welcome/:username' element={<WelcomeComponent />}></Route>
+                    <Route path='/todos' element={<ListTodosComponent />}></Route>
+                    <Route path='/logout' element={<LogoutComponent />}></Route>
+
+                    <Route path='*' element={<ErrorComponent />}></Route>
 
                 </Routes>
-            </BrowserRouter>            
-            
+                <FooterComponent />
+
+            </BrowserRouter>
         </div>
     )
 }
-    
+
 
 
 
@@ -33,7 +38,7 @@ function LoginComponent() {
     const [showErrorMessage, setErrorMessage] = useState('false')
 
     const navigate = useNavigate()
-    
+
 
     function handleUsernameChange(event) {
         setUsername(event.target.value)
@@ -42,14 +47,14 @@ function LoginComponent() {
     function handlePasswordChange(event) {
         setPassword(event.target.value)
     }
-    
+
 
     function handleSubmit() {
-        if(username==='frapson' && password==='abc'){
+        if (username === 'frapson' && password === 'abc') {
             setSuccessMessage(true)
             setErrorMessage(false)
             navigate(`/welcome/${username}`)
-        }else{
+        } else {
             setSuccessMessage(false)
             setErrorMessage(true)
         }
@@ -74,7 +79,7 @@ function LoginComponent() {
                     <button type="button" name="login" onClick={handleSubmit}>SUBMIT</button>
                 </div>
             </div>
-            
+
         </div>
     )
 }
@@ -83,13 +88,13 @@ function LoginComponent() {
 
 function WelcomeComponent() {
 
-    const {username } = useParams()
+    const { username } = useParams()
     console.log(username)
     return (
         <div className="WelcomeComponent">
             <h1>Hello {username}</h1>
             <div>
-                Your todos. <Link to="/todos">Go here</Link>   
+                Your todos. <Link to="/todos">Go here</Link>
             </div>
         </div>
     )
@@ -109,20 +114,20 @@ function ErrorComponent() {
 function ListTodosComponent() {
 
     const today = new Date();
-    const targetDate = new Date(today.getFullYear()+12, today.getMonth(), today.getDay())
+    const targetDate = new Date(today.getFullYear() + 12, today.getMonth(), today.getDay())
 
     const todos = [
-            {id: 1, description: 'Learn AWS', done: false, targetDate:targetDate},
-            {id: 2, description: 'Learn Web Dev', done: false, targetDate:targetDate},
-            {id: 3, description: 'Learn DevOps', done: false, targetDate:targetDate},
-            {id: 4, description: 'Learn Go', done: false, targetDate:targetDate}
-        ]
+        { id: 1, description: 'Learn AWS', done: false, targetDate: targetDate },
+        { id: 2, description: 'Learn Web Dev', done: false, targetDate: targetDate },
+        { id: 3, description: 'Learn DevOps', done: false, targetDate: targetDate },
+        { id: 4, description: 'Learn Go', done: false, targetDate: targetDate }
+    ]
 
     return (
-        <div className="ListTodosComponent">
+        <div className="container">
             <h1>Your stuff...</h1>
             <div>
-                <table>
+                <table className="table">
                     <thead>
                         <tr>
                             <td>Id</td>
@@ -130,26 +135,21 @@ function ListTodosComponent() {
                             <td>Done</td>
                             <td>Target Date</td>
                         </tr>
-                        
+
                     </thead>
                     <tbody>
-                    {
-                        todos.map(
-                            todo => (
-                                <tr key = {todo.id}>
-                                    <td>{todo.id}</td>
-                                    <td>{todo.description}</td>
-                                    <td>{todo.done.toString()}</td>
-                                    <td>{todo.targetDate.toDateString()}</td>
-                                </tr>            
+                        {
+                            todos.map(
+                                todo => (
+                                    <tr key={todo.id}>
+                                        <td>{todo.id}</td>
+                                        <td>{todo.description}</td>
+                                        <td>{todo.done.toString()}</td>
+                                        <td>{todo.targetDate.toDateString()}</td>
+                                    </tr>
+                                )
                             )
-                        )
-                    }
-
-
-                        
-                        
-
+                        }
 
                     </tbody>
 
@@ -157,6 +157,52 @@ function ListTodosComponent() {
 
 
             </div>
+        </div>
+    )
+}
+
+
+
+function HeaderComponent() {
+    return (
+        <header className="border-bottom border-light border-5 mb-5 p-2">
+        <div className="container">
+            <div className="row">
+                <nav className="navbar navbar-expand-lg">
+                    <a className="navbar-brand ms-2 fs-2 fw-bold text-black" href="">frapson</a>
+                    <div className="collapse navbar-collapse">
+                        <ul className="navbar-nav">
+                            <li className="nav-item fs-5"><Link className="nav-link" to="/welcome/in28minutes">Home</Link></li>
+                            <li className="nav-item fs-5"><Link className="nav-link" to="/todos">Todos</Link></li>
+                        </ul>
+                    </div>
+                    <ul className="navbar-nav">
+                        <li className="nav-item fs-5"><Link className="nav-link" to="/login">Login</Link></li>
+                        <li className="nav-item fs-5"><Link className="nav-link" to="/logout">Logout</Link></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    )
+}
+
+function FooterComponent() {
+    return (
+        <footer className="footer">
+            <div className="container">
+                Footer
+            </div>
+        </footer>
+    )
+}
+
+
+function LogoutComponent() {
+    return (
+        <div className="LogoutComponent">
+            Please come back!!
         </div>
     )
 }
