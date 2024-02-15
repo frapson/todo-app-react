@@ -1,16 +1,17 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from './security/AuthContext'
 
 
 export default function LoginComponent() {
 
     const [username, setUsername] = useState('frapson')
     const [password, setPassword] = useState('')
-    const [showSuccessMessage, setSuccessMessage] = useState('false')
     const [showErrorMessage, setErrorMessage] = useState('false')
 
     const navigate = useNavigate()
 
+    const authContext = useAuth()
 
     function handleUsernameChange(event) {
         setUsername(event.target.value)
@@ -22,12 +23,9 @@ export default function LoginComponent() {
 
 
     function handleSubmit() {
-        if (username === 'frapson' && password === 'abc') {
-            setSuccessMessage(true)
-            setErrorMessage(false)
+        if (authContext.login(username, password)) {
             navigate(`/welcome/${username}`)
         } else {
-            setSuccessMessage(false)
             setErrorMessage(true)
         }
     }
@@ -35,7 +33,6 @@ export default function LoginComponent() {
 
     return (
         <div className="Login">
-            {showSuccessMessage && <div className="successMessage">Success</div>}
             {showErrorMessage && <div className="errorMessage">Failed</div>}
 
             <div className="LoginForm">
